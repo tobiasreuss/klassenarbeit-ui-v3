@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Klassenarbeit Korrektur</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #eaf3fa;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 8px;
+<<<<<<< HEAD
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+=======
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+>>>>>>> 91c24f409feadd86d1b3990f1df15e544443d8a5
+      position: relative;
+    }
+    .beta-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #ffdd00;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .bilder {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    .bilder img {
+      width: 48%;
+      border-radius: 8px;
+      border: 4px solid white;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+<<<<<<< HEAD
+h1 {
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+=======
+    h1 {
+      font-size: 1.6rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+>>>>>>> 91c24f409feadd86d1b3990f1df15e544443d8a5
+    .results {
+      margin-top: 2rem;
+    }
+    .box {
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    .streng {
+      background: #ffe5e5;
+      border: 1px solid #ffaaaa;
+    }
+    .nachsichtig {
+      background: #e5ffe5;
+      border: 1px solid #aaffaa;
+    }
+    button {
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.75rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <span class="beta-badge">Beta 0.1</span>
+
+    <div class="bilder">
+      <img src="images/OIP.jpg" alt="Fröhliche Lehrerin mit Schülern">
+      <img src="images/OIP2.jpg" alt="Begeisterte Lehrerin motiviert Schüler">
+    </div>
+
+    <h1>📄 Klassenarbeit Korrektur</h1>
+
+    <form id="korrekturForm" enctype="multipart/form-data">
+      <label>
+        Klassenarbeit (Bild/PDF):
+<<<<<<< HEAD
+        <input type="file" name="data" accept="image/*,.pdf" required />
+=======
+        <input type="file" id="dataInput" name="data" accept="image/*,.pdf" required />
+>>>>>>> 91c24f409feadd86d1b3990f1df15e544443d8a5
+      </label>
+
+      <label>
+        Klassenstufe:
+        <select name="klasse" id="klasseSelect" required>
+          <option value="">Bitte wählen</option>
+        </select>
+      </label>
+
+      <label>
+        Fach:
+        <select name="fach" id="fachSelect" required>
+          <option value="">Bitte wählen</option>
+          <option value="Deutsch">Deutsch</option>
+          <option value="Mathematik">Mathematik</option>
+          <option value="Philosophie">Philosophie</option>
+        </select>
+      </label>
+
+      <label>
+        Art der Aufgabe:
+        <select name="aufgabe" id="aufgabeSelect" required>
+          <option value="">Bitte wählen</option>
+        </select>
+      </label>
+
+      <button type="submit">Absenden & bewerten</button>
+    </form>
+
+    <div class="results" id="results"></div>
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const klasseSelect  = document.getElementById('klasseSelect');
+    const fachSelect    = document.getElementById('fachSelect');
+    const aufgabeSelect = document.getElementById('aufgabeSelect');
+    const form          = document.getElementById('korrekturForm');
+    const resultsDiv    = document.getElementById('results');
+<<<<<<< HEAD
+    const WEBHOOK_URL   = 'https://minerva.app.n8n.cloud/webhook-test/7199702a-7ff5-414a-ad0e-cb7919adecef';
+=======
+    const WEBHOOK_URL   = 'https://minerva.app.n8n.cloud/webhook/7199702a-7ff5-414a-ad0e-cb7919adecef';
+>>>>>>> 91c24f409feadd86d1b3990f1df15e544443d8a5
+
+    // 1) Klassenstufen laden
+    for (let i = 1; i <= 13; i++) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `Klasse ${i}`;
+      klasseSelect.appendChild(opt);
+    }
+
+    // 2) Mapping Fach → Aufgaben
+    const aufgabenByFach = {
+      Deutsch:     ['Diktat','Aufsatz','Erörterung','Zusammenfassung','Bericht','Gedicht'],
+      Mathematik:  ['Textaufgabe','Rechenweg','Beweis','Formel umstellen'],
+      Philosophie: ['Argumentation','Interpretation','Essay','Begriffsanalyse'],
+    };
+<<<<<<< HEAD
+
+    fachSelect.addEventListener('change', () => {
+      aufgabeSelect.innerHTML = '<option value="">Bitte wählen</option>';
+      const liste = aufgabenByFach[fachSelect.value] || [];
+      liste.forEach(a => {
+        const o = document.createElement('option');
+        o.value       = a;
+        o.textContent = a;
+        aufgabeSelect.appendChild(o);
+      });
+    });
+
+    // 3) Formular abschicken
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  resultsDiv.innerHTML = '<p>Bitte warten, Korrektur wird geladen…</p>';
+
+  const formData = new FormData(form);
+  try {
+    const resp = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!resp.ok) {
+      throw new Error(`Serverfehler ${resp.status}`);
+    }
+
+    const json = await resp.json();
+
+    if (!json || !json.streng || !json.nachsichtig) {
+      throw new Error('Leere oder unvollständige Antwort vom Server');
+    }
+
+    resultsDiv.innerHTML = `
+      <div class="box streng">
+        <h2>Strenge Bewertung</h2>
+        <p><strong>Note:</strong> ${json.streng.Note}</p>
+        <pre>${json.streng.Korrektur}</pre>
+      </div>
+      <div class="box nachsichtig">
+        <h2>Nachsichtige Bewertung</h2>
+        <p><strong>Note:</strong> ${json.nachsichtig.Note}</p>
+        <pre>${json.nachsichtig.Korrektur}</pre>
+      </div>
+    `;
+  } catch (err) {
+    console.error(err);
+    resultsDiv.innerHTML = `<p style="color:red">Fehler: ${err.message}</p>`;
+  }
+}); // <-- Klammer und Semikolon ergänzt
+}); // <-- Diese schließende Klammer für DOMContentLoaded ergänzt
+
+=======
+
+    fachSelect.addEventListener('change', () => {
+      aufgabeSelect.innerHTML = '<option value="">Bitte wählen</option>';
+      const liste = aufgabenByFach[fachSelect.value] || [];
+      liste.forEach(a => {
+        const o = document.createElement('option');
+        o.value       = a;
+        o.textContent = a;
+        aufgabeSelect.appendChild(o);
+      });
+    });
+
+    // 3) Formular abschicken
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      resultsDiv.innerHTML = '<p>Bitte warten, Korrektur wird geladen…</p>';
+      const formData = new FormData(form);
+
+      try {
+        const resp = await fetch(WEBHOOK_URL, { method: 'POST', body: formData });
+        if (!resp.ok) throw new Error(`Serverfehler ${resp.status}`);
+
+        const json = await resp.json();
+        console.log('Server-Antwort:', json);
+        let body = json;
+        if (json.message && json.message.content) {
+          body = JSON.parse(json.message.content);
+        }
+
+        resultsDiv.innerHTML = `
+        <div class="box streng">
+          <h2>Strenge Bewertung</h2>
+          <p><strong>Note:</strong> ${body.streng.Note}</p>
+          <pre>${body.streng.Korrektur}</pre>
+        </div>
+        <div class="box nachsichtig">
+          <h2>Nachsichtige Bewertung</h2>
+          <p><strong>Note:</strong> ${body.nachsichtig.Note}</p>
+          <pre>${body.nachsichtig.Korrektur}</pre>
+        </div>
+`;
+
+        `;
+      } catch (err) {
+        console.error(err);
+        console.log('==> UI-Update mit:', body);
+        resultsDiv.innerHTML = `<p style="color:red">Fehler: ${err.message}</p>`;
+      }
+    });
+  });
+>>>>>>> 91c24f409feadd86d1b3990f1df15e544443d8a5
+  </script>
+</body>
+</html>

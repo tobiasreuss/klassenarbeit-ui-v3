@@ -168,24 +168,25 @@
             json = JSON.parse(json.message.content);
           }
 
-       resultsDiv.innerHTML = `
-  <div class="box streng">
-    <h2>Strenge Bewertung</h2>
-    <p><strong>Note:</strong> ${body.streng.note}</p>
-    <p><strong>Korrektur:</strong></p>
-    <pre>${body.streng.korrektur}</pre>
-    <p><strong>Rechtschreibfehler:</strong> ${body.streng.anzahl_fehler.rechtschreibfehler}</p>
-    <p><strong>Grammatikfehler:</strong> ${body.streng.anzahl_fehler.grammatikfehler}</p>
-  </div>
-  <div class="box nachsichtig">
-    <h2>Nachsichtige Bewertung</h2>
-    <p><strong>Note:</strong> ${body.nachsichtig.note}</p>
-    <p><strong>Korrektur:</strong></p>
-    <pre>${body.nachsichtig.korrektur}</pre>
-    <p><strong>Rechtschreibfehler:</strong> ${body.nachsichtig.anzahl_fehler.rechtschreibfehler}</p>
-    <p><strong>Grammatikfehler:</strong> ${body.nachsichtig.anzahl_fehler.grammatikfehler}</p>
-  </div>
+      resultsDiv.innerHTML = `
+        <div class="box streng">
+          <h2>Strenge Bewertung</h2>
+          <p><strong>Note:</strong> ${json.streng.note}</p>
+          <p><strong>Korrektur:</strong></p>
+          <pre>${json.streng.korrektur}</pre>
+          <p><strong>Rechtschreibfehler:</strong> ${json.streng.anzahl_fehler.rechtschreibfehler}</p>
+          <p><strong>Grammatikfehler:</strong> ${json.streng.anzahl_fehler.grammatikfehler}</p>
+        </div>
+        <div class="box nachsichtig">
+          <h2>Nachsichtige Bewertung</h2>
+          <p><strong>Note:</strong> ${json.nachsichtig.note}</p>
+          <p><strong>Korrektur:</strong></p>
+          <pre>${json.nachsichtig.korrektur}</pre>
+          <p><strong>Rechtschreibfehler:</strong> ${json.nachsichtig.anzahl_fehler.rechtschreibfehler}</p>
+          <p><strong>Grammatikfehler:</strong> ${json.nachsichtig.anzahl_fehler.grammatikfehler}</p>
+        </div>
 `;
+
 
         } catch (err) {
           console.error(err);

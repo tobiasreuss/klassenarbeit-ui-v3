@@ -164,6 +164,7 @@
           if (!text) throw new Error('Leere Antwort vom Server');
 
           let json = JSON.parse(text);
+          console.log('★ Ganzes JSON:', json);
           if (json.message?.content) {
             json = JSON.parse(json.message.content);
           }

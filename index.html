@@ -113,88 +113,79 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const klasseSelect  = document.getElementById('klasseSelect');
-      const fachSelect    = document.getElementById('fachSelect');
-      const aufgabeSelect = document.getElementById('aufgabeSelect');
-      const form          = document.getElementById('korrekturForm');
-      const resultsDiv    = document.getElementById('results');
-      const WEBHOOK_URL   = 'https://minerva.app.n8n.cloud/webhook/7199702a-7ff5-414a-ad0e-cb7919adecef';
+  document.addEventListener('DOMContentLoaded', () => {
+    const klasseSelect  = document.getElementById('klasseSelect');
+    const fachSelect    = document.getElementById('fachSelect');
+    const aufgabeSelect = document.getElementById('aufgabeSelect');
+    const form          = document.getElementById('korrekturForm');
+    const resultsDiv    = document.getElementById('results');
+    const WEBHOOK_URL   = 'https://minerva.app.n8n.cloud/webhook/7199702a-7ff5-414a-ad0e-cb7919adecef';
 
-      // 1) Klassenstufen laden
-      for (let i = 1; i <= 13; i++) {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = `Klasse ${i}`;
-        klasseSelect.appendChild(opt);
-      }
+    // 1) Klassenstufen laden
+    for (let i = 1; i <= 13; i++) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `Klasse ${i}`;
+      klasseSelect.appendChild(opt);
+    }
 
-      // 2) Fach → Aufgaben
-      const aufgabenByFach = {
-        Deutsch:     ['Diktat','Aufsatz','Erörterung','Zusammenfassung','Bericht','Gedicht'],
-        Mathematik:  ['Textaufgabe','Rechenweg','Beweis','Formel umstellen'],
-        Philosophie: ['Argumentation','Interpretation','Essay','Begriffsanalyse'],
-      };
+    // 2) Mapping Fach → Aufgaben
+    const aufgabenByFach = {
+      Deutsch:     ['Diktat','Aufsatz','Erörterung','Zusammenfassung','Bericht','Gedicht'],
+      Mathematik:  ['Textaufgabe','Rechenweg','Beweis','Formel umstellen'],
+      Philosophie: ['Argumentation','Interpretation','Essay','Begriffsanalyse'],
+    };
 
-      fachSelect.addEventListener('change', () => {
-        aufgabeSelect.innerHTML = '<option value="">Bitte wählen</option>';
-        (aufgabenByFach[fachSelect.value]||[]).forEach(a => {
-          const o = document.createElement('option');
-          o.value = a;
-          o.textContent = a;
-          aufgabeSelect.appendChild(o);
-        });
-      });
-
-      // 3) Submit & Fetch
-      form.addEventListener('submit', async e => {
-        e.preventDefault();
-        if (!form.checkValidity()) {
-          form.reportValidity();
-          return;
-        }
-        resultsDiv.innerHTML = '<p>Bitte warten, Korrektur wird geladen…</p>';
-        const formData = new FormData(form);
-
-        try {
-          const resp = await fetch(WEBHOOK_URL, { method: 'POST', body: formData });
-          if (!resp.ok) throw new Error(`Serverfehler ${resp.status}`);
-
-          const text = await resp.text();
-          if (!text) throw new Error('Leere Antwort vom Server');
-
-          let json = JSON.parse(text);
-          console.log('★ Ganzes JSON:', json);
-          if (json.message?.content) {
-            json = JSON.parse(json.message.content);
-          }
-
-      resultsDiv.innerHTML = `
-        <div class="box streng">
-          <h2>Strenge Bewertung</h2>
-          <p><strong>Note:</strong> ${json.streng.note}</p>
-          <p><strong>Korrektur:</strong></p>
-          <pre>${json.streng.korrektur}</pre>
-          <p><strong>Rechtschreibfehler:</strong> ${json.streng.anzahl_fehler.rechtschreibfehler}</p>
-          <p><strong>Grammatikfehler:</strong> ${json.streng.anzahl_fehler.grammatikfehler}</p>
-        </div>
-        <div class="box nachsichtig">
-          <h2>Nachsichtige Bewertung</h2>
-          <p><strong>Note:</strong> ${json.nachsichtig.note}</p>
-          <p><strong>Korrektur:</strong></p>
-          <pre>${json.nachsichtig.korrektur}</pre>
-          <p><strong>Rechtschreibfehler:</strong> ${json.nachsichtig.anzahl_fehler.rechtschreibfehler}</p>
-          <p><strong>Grammatikfehler:</strong> ${json.nachsichtig.anzahl_fehler.grammatikfehler}</p>
-        </div>
-`;
-
-
-        } catch (err) {
-          console.error(err);
-          resultsDiv.innerHTML = `<p style="color:red">Fehler: ${err.message}</p>`;
-        }
+    fachSelect.addEventListener('change', () => {
+      aufgabeSelect.innerHTML = '<option value="">Bitte wählen</option>';
+      (aufgabenByFach[fachSelect.value] || []).forEach(a => {
+        const o = document.createElement('option');
+        o.value       = a;
+        o.textContent = a;
+        aufgabeSelect.appendChild(o);
       });
     });
+
+    // 3) Formular abschicken
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      resultsDiv.innerHTML = '<p>Bitte warten, Korrektur wird geladen…</p>';
+      const formData = new FormData(form);
+
+      try {
+        const resp = await fetch(WEBHOOK_URL, { method: 'POST', body: formData });
+        if (!resp.ok) throw new Error(`Serverfehler ${resp.status}`);
+
+        const json = await resp.json();
+        console.log('Server-Antwort:', json);
+        let body = json;
+        if (json.message && json.message.content) {
+          body = JSON.parse(json.message.content);
+        }
+
+        resultsDiv.innerHTML = `
+          <div class="box streng">
+            <h2>Strenge Bewertung</h2>
+            <p><strong>Note:</strong> ${body.streng.Note}</p>
+            <pre>${body.streng.Korrektur}</pre>
+          </div>
+          <div class="box nachsichtig">
+            <h2>Nachsichtige Bewertung</h2>
+            <p><strong>Note:</strong> ${body.nachsichtig.Note}</p>
+            <pre>${body.nachsichtig.Korrektur}</pre>
+          </div>
+        `;
+      } catch (err) {
+        console.error(err);
+        resultsDiv.innerHTML = `<p style="color:red">Fehler: ${err.message}</p>`;
+      }
+    });
+  });
   </script>
 </body>
 </html>
